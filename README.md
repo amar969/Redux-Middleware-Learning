@@ -34,3 +34,55 @@ const lofferMiddleware = function (store){
 
 ```
 
+#### How to use store subscibe
+```
+store.subscribe(() => {
+    console.log( "current state",  store.getState())
+})
+```
+
+Steps how things works/called via middleware 
+1. Middleware 
+2. reducer - action 
+3. store get updeted
+
+### To add multiple middleware 
+const middleware = applyMiddleware(middleware1, middleware2)
+
+### Create a function that have all the network request then middleware thunk will take care of it
+
+```
+export const getAllTodos = () => async(dispatch) => {
+    try {
+        dispatch(getAllLatestTodosLoding())
+        let res = await fetch("url")
+        let data = await res.json()
+        dispatch(getAllLatestTodosSuccess(data))
+    } catch (error) {
+        console.log(error)
+        dispatch(getAllTodosFailure())
+    }
+
+}
+```
+
+
+
+### To add the third middleware in thunk 
+1. import compose from redux
+2. 
+const composeEnhancers =
+  typeof window === 'object' &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+      // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+    }) : compose;
+
+const middleware = [thunk]
+
+const enhancer = composeEnhancers(
+  applyMiddleware(...middleware),
+  // other store enhancers if any
+);
+const store = createStore(reducer, enhancer);
+3. applymiddleware
